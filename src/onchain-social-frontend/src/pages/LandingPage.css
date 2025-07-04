@@ -1,0 +1,74 @@
+body {
+margin: 0;
+font-family: 'Segoe UI', sans-serif;
+background: linear-gradient(to right, #141e30, #243b55);
+}
+
+.landing-container {
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+color: white;
+text-align: center;
+}
+
+.hero {
+animation: fadeIn 1.5s ease-in;
+}
+
+.animated-title {
+font-size: 3rem;
+font-weight: bold;
+animation: slideInDown 1s ease;
+}
+
+.subtitle {
+font-size: 1.5rem;
+margin-bottom: 2rem;
+animation: fadeIn 2s ease-in;
+}
+
+.buttons {
+display: flex;
+justify-content: center;
+gap: 20px;
+}
+
+.btn {
+padding: 12px 24px;
+font-size: 1rem;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.login-btn {
+background-color: #ff6b6b;
+color: white;
+}
+
+.login-btn:hover {
+background-color: #ff4b4b;
+}
+
+.register-btn {
+background-color: #1dd1a1;
+color: white;
+}
+
+.register-btn:hover {
+background-color: #10ac84;
+}
+
+/* Animations */
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: scale(0.98);
+}
+to {
+opacity: 1;
+transform: scale(1);
+}

@@ -6,18 +6,16 @@
   "scripts": {
     "setup": "npm i && dfx canister create onchain-social-backend && dfx generate onchain-social-backend && dfx deploy",
     "start": "vite --port 3000",
-    "dev": "vite --port 3000",
     "prebuild": "dfx generate",
     "build": "tsc && vite build",
     "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\""
   },
   "dependencies": {
-    "@dfinity/agent": "^2.4.1",
-    "@dfinity/candid": "^2.4.1",
-    "@dfinity/principal": "^2.1.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.30.1"
+    "@dfinity/agent": "^2.1.3",
+    "@dfinity/candid": "^2.1.3",
+    "@dfinity/principal": "^2.1.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",
@@ -26,7 +24,8 @@
     "dotenv": "^16.3.1",
     "sass": "^1.63.6",
     "typescript": "^5.1.3",
-    "vite": "^4.5.14",
+    "vite": "^4.3.9",
     "vite-plugin-environment": "^1.1.3"
   }
 }
+
