@@ -61,6 +61,15 @@ color: white;
 .register-btn:hover {
 background-color: #10ac84;
 }
+.profile-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.profile-btn:hover {
+  background-color: #2980b9;
+}
+
 
 /* Animations */
 @keyframes fadeIn {

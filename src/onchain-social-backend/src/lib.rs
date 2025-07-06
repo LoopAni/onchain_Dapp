@@ -325,3 +325,7 @@ fn search_users(query: String) -> Vec<UserProfile> {
             .collect()
     })
 }
+#[init]
+fn init() {
+    ic_cdk::println!("Canister initialized");
+}

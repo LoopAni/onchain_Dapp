@@ -1,38 +1,45 @@
 {
+  "version": 1,
   "canisters": {
     "internet_identity": {
+      "type": "custom",
       "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
-      "frontend": {},
+      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz",
       "remote": {
         "id": {
           "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
         }
       },
-      "type": "custom",
-      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
+      "frontend": {}
     },
     "onchain-social-backend": {
+      "type": "custom",
       "candid": "src/onchain-social-backend/onchain-social-backend.did",
-      "package": "onchain-social-backend",
-      "type": "rust"
+      "wasm": "target/wasm32-unknown-unknown/release/onchain_social_backend.wasm"
     },
     "onchain-social-frontend": {
-      "dependencies": [
-        "onchain-social-backend"
-      ],
-      "source": [
-        "src/onchain-social-frontend/dist"
-      ],
       "type": "assets",
-      "workspace": "onchain-social-frontend"
+      "source": ["src/onchain-social-frontend/dist"]
     }
   },
   "defaults": {
     "build": {
-      "args": "",
       "packtool": ""
     }
   },
-  "output_env_file": ".env",
-  "version": 1
+  "dfx": "0.27.0",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:4943",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "type": "persistent"
+    }
+  },
+  "workspace": {
+    "members": [
+      "src/onchain-social-backend"
+    ]
+  }
 }
