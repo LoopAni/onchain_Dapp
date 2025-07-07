@@ -15,7 +15,13 @@
     "onchain-social-backend": {
       "type": "custom",
       "candid": "src/onchain-social-backend/onchain-social-backend.did",
-      "wasm": "target/wasm32-unknown-unknown/release/onchain_social_backend.wasm"
+      "wasm": "target/wasm32-unknown-unknown/release/onchain_social_backend.wasm",
+       "metadata": [
+    {
+      "name": "candid:service",
+      "path": "src/onchain-social-backend/onchain-social-backend.did"
+    }
+  ]
     },
     "onchain-social-frontend": {
       "type": "assets",
