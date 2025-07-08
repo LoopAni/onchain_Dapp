@@ -1,0 +1,49 @@
+.landing-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1d1f27, #2c2f3a);
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.landing-header {
+  text-align: center;
+  max-width: 600vh;
+  padding: 2rem;
+  border-radius: 20vh;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.landing-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.landing-header p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.landing-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  background-color: #00bcd4;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background-color: #0097a7;
+}
