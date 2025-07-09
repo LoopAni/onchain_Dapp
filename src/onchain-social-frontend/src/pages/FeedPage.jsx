@@ -2,72 +2,105 @@ import "./FeedPage.css";
 import { useState } from "react";
 
 function FeedPage() {
-  const [storyFile, setStoryFile] = useState(null);
-  const [storyPreview, setStoryPreview] = useState("");
-  const [stories, setStories] = useState([
-    { id: 1, name: "muskan", img: "https://i.pravatar.cc/60?img=10" },
-    { id: 2, name: "anisha", img: "https://i.pravatar.cc/60?img=20" },
-    { id: 3, name: "loopani", img: "https://i.pravatar.cc/60?img=30" },
-  ]);
-
-  const [postFile, setPostFile] = useState(null);
   const [postCaption, setPostCaption] = useState("");
   const [posts, setPosts] = useState([
     {
       id: 1,
       username: "muskan",
       avatar: "https://i.pravatar.cc/40?img=10",
-      image: "https://picsum.photos/id/1015/400/300",
-      caption: "Peaceful mornings near the mountains 🌄✨",
+      caption: "Just launched my on-chain social app! 🚀 #web3",
     },
     {
       id: 2,
       username: "anisha",
       avatar: "https://i.pravatar.cc/40?img=20",
-      image: "https://picsum.photos/id/1025/400/300",
-      caption: "My furry best friend 🐶❤️ #weekendvibes",
+      caption: "Coffee + code = ❤️",
+    },
+  ]);
+
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [editCaption, setEditCaption] = useState("");
+
+  // Like logic
+  const [likedPosts, setLikedPosts] = useState({});
+
+  const toggleLike = (postId) => {
+    setLikedPosts((prev) => ({
+      ...prev,
+      [postId]: !prev[postId],
+    }));
+  };
+
+  // Search & Follow logic
+  const [search, setSearch] = useState("");
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      username: "muskan",
+      avatar: "https://i.pravatar.cc/100?img=10",
+      isFollowing: false,
+    },
+    {
+      id: 2,
+      username: "anisha",
+      avatar: "https://i.pravatar.cc/100?img=20",
+      isFollowing: false,
     },
     {
       id: 3,
       username: "loopani",
-      avatar: "https://i.pravatar.cc/40?img=30",
-      image: "https://picsum.photos/id/1035/400/300",
-      caption: "Lost in nature 🍃 Walking through the woods.",
+      avatar: "https://i.pravatar.cc/100?img=30",
+      isFollowing: false,
     },
   ]);
 
-  const handleStoryUpload = () => {
-    if (storyFile) {
-      const newStory = {
-        id: Date.now(),
-        name: "you",
-        img: URL.createObjectURL(storyFile),
-      };
-      setStories([newStory, ...stories]);
-      setStoryFile(null);
-      setStoryPreview("");
-    }
+  const toggleFollow = (id) => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === id ? { ...u, isFollowing: !u.isFollowing } : u
+      )
+    );
   };
 
   const handlePostUpload = () => {
-    if (postFile && postCaption) {
+    if (postCaption.trim()) {
       const newPost = {
         id: Date.now(),
         username: "you",
         avatar: "https://i.pravatar.cc/40?img=1",
-        image: URL.createObjectURL(postFile),
-        caption: postCaption,
+        caption: postCaption.trim(),
       };
       setPosts([newPost, ...posts]);
-      setPostFile(null);
       setPostCaption("");
     }
   };
 
+  const handleDelete = (id) => {
+    setPosts(posts.filter((post) => post.id !== id));
+  };
+
+  const startEdit = (id, currentCaption) => {
+    setEditingPostId(id);
+    setEditCaption(currentCaption);
+  };
+
+  const handleSaveEdit = (id) => {
+    setPosts(
+      posts.map((post) =>
+        post.id === id ? { ...post, caption: editCaption } : post
+      )
+    );
+    setEditingPostId(null);
+  };
+
+  const filteredUsers = users.filter((u) =>
+    u.username.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="feed-container">
       <div className="feed-box">
-        {/* Top Bar with Dummy Logo */}
+        {/* Top Bar */}
         <div className="top-bar">
           <div className="logo">
             <img
@@ -83,38 +116,35 @@ function FeedPage() {
           </div>
         </div>
 
-        {/* Story Upload */}
+        {/* Search Bar */}
         <div className="upload-section">
-          <input
-            type="file"
-            accept="image/*,video/*"
-            onChange={(e) => setStoryFile(e.target.files[0])}
-          />
-          <button onClick={handleStoryUpload}>Share Story</button>
-        </div>
-
-        {/* Stories */}
-        <div className="story-section">
-          {stories.map((story) => (
-            <div key={story.id} className="story-box">
-              <img src={story.img} className="story" alt={story.name} />
-              <p className="story-name">@{story.name}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Post Upload */}
-        <div className="upload-section">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setPostFile(e.target.files[0])}
-          />
           <input
             type="text"
-            placeholder="Write a caption..."
+            placeholder="Search users to follow..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ marginBottom: "1rem" }}
+          />
+
+          {search.length > 0 &&
+            filteredUsers.map((user) => (
+              <div className="user-card" key={user.id}>
+                <img src={user.avatar} className="avatar" alt={user.username} />
+                <span>@{user.username}</span>
+                <button onClick={() => toggleFollow(user.id)}>
+                  {user.isFollowing ? "Unfollow" : "Follow"}
+                </button>
+              </div>
+            ))}
+        </div>
+
+        {/* Post Creation */}
+        <div className="upload-section">
+          <textarea
+            placeholder="What's happening?"
             value={postCaption}
             onChange={(e) => setPostCaption(e.target.value)}
+            rows={3}
           />
           <button onClick={handlePostUpload}>Post</button>
         </div>
@@ -126,13 +156,40 @@ function FeedPage() {
               <img src={post.avatar} className="avatar" alt={post.username} />
               <span>@{post.username}</span>
             </div>
-            <img src={post.image} className="post-img" alt="post" />
+
             <div className="post-actions">
-              <i className="fas fa-heart icon"></i>
-              <i className="fas fa-comment icon"></i>
-              <i className="fas fa-bookmark icon"></i>
+              <i
+                className={`fas fa-heart icon ${
+                  likedPosts[post.id] ? "liked" : ""
+                }`}
+                onClick={() => toggleLike(post.id)}
+              ></i>
             </div>
-            <div className="caption">{post.caption}</div>
+
+            {editingPostId === post.id ? (
+              <div className="edit-box">
+                <input
+                  type="text"
+                  value={editCaption}
+                  onChange={(e) => setEditCaption(e.target.value)}
+                />
+                <button onClick={() => handleSaveEdit(post.id)}>Save</button>
+                <button onClick={() => setEditingPostId(null)}>Cancel</button>
+              </div>
+            ) : (
+              <>
+                <div className="caption">{post.caption}</div>
+                {post.username === "you" && (
+                  <div className="post-buttons">
+                    <button onClick={() => startEdit(post.id, post.caption)}>
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(post.id)}>Delete</button>
+                  </div>
+                )}
+              </>
+            )}
+
             <div className="comment-box">
               <input type="text" placeholder="Add a comment..." />
             </div>
