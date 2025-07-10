@@ -9,16 +9,14 @@ function FeedPage() {
       username: "muskan",
       avatar: "https://i.pravatar.cc/40?img=10",
       caption: "Just launched my on-chain social app! 🚀 #web3",
-      likes: 0,
-      dislikes: 0,
+      likes: ["you"],
     },
     {
       id: 2,
       username: "anisha",
       avatar: "https://i.pravatar.cc/40?img=20",
       caption: "Coffee + code = ❤️",
-      likes: 0,
-      dislikes: 0,
+      likes: [],
     },
   ]);
 
@@ -65,8 +63,7 @@ function FeedPage() {
         username: "you",
         avatar: "https://i.pravatar.cc/40?img=1",
         caption: postCaption.trim(),
-        likes: 0,
-        dislikes: 0,
+        likes: [],
       };
       setPosts([newPost, ...posts]);
       setPostCaption("");
@@ -91,23 +88,18 @@ function FeedPage() {
     setEditingPostId(null);
   };
 
-  const handleLike = (id) => {
-  setPosts((prev) =>
-    prev.map((post) =>
-      post.id === id
-        ? { ...post, likes: post.likes + 1, dislikes: Math.max(post.dislikes - 1, 0) }
-        : post
-       )
-    );
-  };
-
-const handleDislike = (id) => {
-  setPosts((prev) =>
-    prev.map((post) =>
-      post.id === id
-        ? { ...post, dislikes: post.dislikes + 1, likes: Math.max(post.likes - 1, 0) }
-        : post
-       )
+  const handleToggleLike = (postId) => {
+  setPosts((prevPosts) =>
+    prevPosts.map((post) => {
+      if (post.id === postId) {
+        const hasLiked = post.likes.includes("you"); // Replace "you" with principal in real version
+        const updatedLikes = hasLiked
+          ? post.likes.filter((user) => user !== "you") // remove like
+          : [...post.likes, "you"]; // add like
+        return { ...post, likes: updatedLikes };
+      }
+      return post;
+     })
     );
   };
 
@@ -176,11 +168,11 @@ const handleDislike = (id) => {
             </div>
 
             <div className="post-actions">
-              <button onClick={() => handleLike(post.id)} className="reaction-button">
-                👍 {post.likes}
-              </button>
-              <button onClick={() => handleDislike(post.id)} className="reaction-button">
-                👎 {post.dislikes}
+              <button
+                className={`like-button ${post.likes.includes("you") ? "liked" : ""}`}
+                onClick={() => handleToggleLike(post.id)}
+              >
+               ❤️ {post.likes.length}
               </button>
             </div>
 
