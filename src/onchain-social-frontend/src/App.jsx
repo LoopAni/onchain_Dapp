@@ -5,7 +5,6 @@ import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
 import FeedPage from './pages/FeedPage';
-import SuggestedUsers from './pages/SuggestedUsers';
 
 
 
@@ -20,7 +19,6 @@ function App() {
            <Route path="/profile" element={<ProfilePage />} />
            <Route path="/edit-profile" element={<EditProfilePage />} />
            <Route path="/feed" element={<FeedPage />} />
-           <Route path="/suggested" element={<SuggestedUsers />} />
 
            
          
