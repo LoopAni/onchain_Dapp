@@ -1,4 +1,4 @@
-import "./EditProfilePage.css";
+import "./ProfilePage.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
