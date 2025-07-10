@@ -9,27 +9,23 @@ function FeedPage() {
       username: "muskan",
       avatar: "https://i.pravatar.cc/40?img=10",
       caption: "Just launched my on-chain social app! 🚀 #web3",
+      likes: 0,
+      dislikes: 0,
     },
     {
       id: 2,
       username: "anisha",
       avatar: "https://i.pravatar.cc/40?img=20",
       caption: "Coffee + code = ❤️",
+      likes: 0,
+      dislikes: 0,
     },
   ]);
 
   const [editingPostId, setEditingPostId] = useState(null);
   const [editCaption, setEditCaption] = useState("");
 
-  // Like logic
-  const [likedPosts, setLikedPosts] = useState({});
 
-  const toggleLike = (postId) => {
-    setLikedPosts((prev) => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
-  };
 
   // Search & Follow logic
   const [search, setSearch] = useState("");
@@ -69,6 +65,8 @@ function FeedPage() {
         username: "you",
         avatar: "https://i.pravatar.cc/40?img=1",
         caption: postCaption.trim(),
+        likes: 0,
+        dislikes: 0,
       };
       setPosts([newPost, ...posts]);
       setPostCaption("");
@@ -91,6 +89,26 @@ function FeedPage() {
       )
     );
     setEditingPostId(null);
+  };
+
+  const handleLike = (id) => {
+  setPosts((prev) =>
+    prev.map((post) =>
+      post.id === id
+        ? { ...post, likes: post.likes + 1, dislikes: Math.max(post.dislikes - 1, 0) }
+        : post
+       )
+    );
+  };
+
+const handleDislike = (id) => {
+  setPosts((prev) =>
+    prev.map((post) =>
+      post.id === id
+        ? { ...post, dislikes: post.dislikes + 1, likes: Math.max(post.likes - 1, 0) }
+        : post
+       )
+    );
   };
 
   const filteredUsers = users.filter((u) =>
@@ -158,12 +176,12 @@ function FeedPage() {
             </div>
 
             <div className="post-actions">
-              <i
-                className={`fas fa-heart icon ${
-                  likedPosts[post.id] ? "liked" : ""
-                }`}
-                onClick={() => toggleLike(post.id)}
-              ></i>
+              <button onClick={() => handleLike(post.id)} className="reaction-button">
+                👍 {post.likes}
+              </button>
+              <button onClick={() => handleDislike(post.id)} className="reaction-button">
+                👎 {post.dislikes}
+              </button>
             </div>
 
             {editingPostId === post.id ? (

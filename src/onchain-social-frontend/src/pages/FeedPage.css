@@ -235,3 +235,22 @@
   padding: 0.4rem 0.8rem;
   cursor: pointer;
 }
+
+/* Like/Dislike Buttons */
+.reaction-button {
+  background: #181818;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reaction-button:hover {
+  background: #00acee;
+  color: #121212;
+  border-color: #00acee;
+  transform: scale(1.05);
+}
