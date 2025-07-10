@@ -1,31 +1,31 @@
 import "./RegisterPage.css";
-import { useNavigate } from "react-router-dom";
 
 function RegisterPage() {
-  const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // In real use: send data to backend
-    navigate("/login"); // After registration, go to login page
-  };
-
   return (
     <div className="register-container">
       <div className="register-left">
-        <form className="register-form" onSubmit={handleSubmit}>
-          <h2>Create Your Account</h2>
+        <div className="register-form">
+          <h2>Welcome to Onchain Social</h2>
 
-          <input type="text" placeholder="Username" className="register-input" required />
-          <input type="email" placeholder="Email" className="register-input" required />
-          <input type="password" placeholder="Password" className="register-input" required />
-
-          <button type="submit" className="register-button">Register</button>
-
-          <p className="register-link">
-            Already have an account? <a href="/login">Login</a>
+          <p className="register-info-text">
+            Onchain Social uses Internet Identity for secure, passwordless login.
+            You don’t need to register manually.
           </p>
-        </form>
+
+          <p className="register-info-text">
+            Simply click the “Login with Internet Identity” button on the login page.
+            If you don't have an identity yet, you can create one there securely.
+          </p>
+
+          <a
+            href="https://identity.ic0.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="register-link"
+          >
+            Visit Internet Identity Portal
+          </a>
+        </div>
       </div>
     </div>
   );

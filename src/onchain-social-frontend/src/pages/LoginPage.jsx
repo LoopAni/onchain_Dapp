@@ -1,30 +1,39 @@
 import "./LoginPage.css";
 import { useNavigate } from 'react-router-dom';
+import { AuthClient } from "@dfinity/auth-client";
 
 function LoginPage() {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // In real project: send data to backend
-    navigate("/feed"); // Redirect to Feed Page after login
+  const loginWithII = async () => {
+    const authClient = await AuthClient.create();
+
+    await authClient.login({
+      identityProvider: "https://identity.ic0.app/#authorize",
+      onSuccess: async () => {
+        const identity = authClient.getIdentity();
+        const principal = identity.getPrincipal().toText();
+        console.log("Login successful! Principal:", principal);
+
+        // Optional: Store principal in state/localStorage if needed
+
+        navigate("/feed"); // Navigate to feed on success
+      },
+    });
   };
 
   return (
     <div className="login-container">
       <div className="login-left">
-        <form className="login-form" onSubmit={handleSubmit}>
+        <div className="login-form">
           <h2>Login to Onchain Social</h2>
 
-          <input type="email" placeholder="Email" className="login-input" required />
-          <input type="password" placeholder="Password" className="login-input" required />
+          {/* You can remove email/password if not needed */}
+          <button onClick={loginWithII} className="login-button">
+            Login with Internet Identity
+          </button>
 
-          <button type="submit" className="login-button">Login</button>
-
-          <p className="login-link">
-            Don't have an account? <a href="/register">Register</a>
-          </p>
-        </form>
+        </div>
       </div>
     </div>
   );
