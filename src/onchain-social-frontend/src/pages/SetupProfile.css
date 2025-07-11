@@ -1,0 +1,65 @@
+.setup-profile-container {
+min-height: 100vh;
+background: #121212;
+color: white;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.setup-profile-card {
+background: #1e1e1e;
+padding: 2rem;
+border-radius: 12px;
+width: 90%;
+max-width: 500px;
+box-shadow: 0 0 10px rgba(0, 172, 238, 0.2);
+}
+
+.setup-profile-card h2 {
+margin-bottom: 1rem;
+color: #00acee;
+text-align: center;
+}
+
+.info-text {
+font-size: 0.9rem;
+margin-bottom: 1rem;
+color: #ccc;
+text-align: center;
+}
+
+.setup-form {
+display: flex;
+flex-direction: column;
+gap: 1rem;
+}
+
+.setup-form input,
+.setup-form textarea {
+background: #181818;
+border: 1px solid #333;
+padding: 0.8rem;
+border-radius: 6px;
+color: white;
+font-size: 1rem;
+}
+
+.setup-form textarea {
+resize: none;
+height: 80px;
+}
+
+.setup-form button {
+background: #00acee;
+border: none;
+color: white;
+padding: 0.7rem;
+border-radius: 6px;
+cursor: pointer;
+font-weight: bold;
+}
+
+setup-form button:hover {
+background: #008ec4;
+}

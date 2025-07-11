@@ -15,11 +15,16 @@ function LoginPage() {
         const principal = identity.getPrincipal().toText();
         console.log("Login successful! Principal:", principal);
 
-        // Optional: Store principal in state/localStorage if needed
+        // Simulate backend profile check
+    const existingProfile = localStorage.getItem(`profile:${principal}`);
 
-        navigate("/feed"); // Navigate to feed on success
-      },
-    });
+    if (existingProfile) {
+      navigate("/feed");
+    } else {
+      navigate("/profile-setup");
+      }
+    },
+   });
   };
 
   return (

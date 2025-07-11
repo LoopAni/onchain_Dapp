@@ -1,10 +1,14 @@
 import "./FeedPage.css";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { AuthClient } from "@dfinity/auth-client";
 
 function FeedPage() {
   const [postContent, setPostContent] = useState("");
   const [visibility, setVisibility] = useState("public");
+
+  const [profile, setProfile] = useState(null);
+  const [principal, setPrincipal] = useState(null);
+  const [commentInputs, setCommentInputs] = useState({});
 
   const [posts, setPosts] = useState([
     {
@@ -14,6 +18,7 @@ function FeedPage() {
       content: "Just launched my on-chain social app! 🚀 #web3",
       likes: ["you"],
       timestamp: new Date().toISOString(),
+      comments: [],
       visible: true,
       author: "muskan",
     },
@@ -24,6 +29,7 @@ function FeedPage() {
       content: "Coffee + code = ❤️",
       likes: [],
       timestamp: new Date().toISOString(),
+      comments: [],
       visible: true,
       author: "anisha",
     },
@@ -32,18 +38,103 @@ function FeedPage() {
   const [editingPostId, setEditingPostId] = useState(null);
   const [editContent, setEditContent] = useState("");
 
+  // Search & Follow logic
+const [search, setSearch] = useState("");
+const [showDropdown, setShowDropdown] = useState(false);
+const [users, setUsers] = useState([]);
+
+useEffect(() => {
+  const hardcodedUsers = [
+    {
+      id: "1",
+      username: "muskan",
+      avatar: "https://i.pravatar.cc/100?img=10",
+      isFollowing: false,
+    },
+    {
+      id: "2",
+      username: "anisha",
+      avatar: "https://i.pravatar.cc/100?img=20",
+      isFollowing: false,
+    },
+    {
+      id: "3",
+      username: "loopani",
+      avatar: "https://i.pravatar.cc/100?img=30",
+      isFollowing: false,
+    },
+  ];
+
+  const profiles = [];
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith("profile:")) {
+      const profile = JSON.parse(localStorage.getItem(key));
+      const exists = hardcodedUsers.find(
+        (u) => u.username.toLowerCase() === profile.username.toLowerCase()
+      );
+      if (!exists) {
+        profiles.push({
+          id: key,
+          username: profile.username,
+          avatar: profile.avatarUrl || "https://i.ibb.co/Pr3bY4X/default-avatar.png",
+          isFollowing: false,
+        });
+      }
+    }
+  }
+
+  setUsers([...hardcodedUsers, ...profiles]);
+}, []);
+
+const toggleFollow = (id) => {
+  setUsers((prevUsers) =>
+    prevUsers.map((u) =>
+      u.id === id ? { ...u, isFollowing: !u.isFollowing } : u
+    )
+  );
+};
+
+const filteredUsers = users.filter((user) =>
+  user.username.toLowerCase().includes(search.toLowerCase())
+);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+      const authClient = await AuthClient.create();
+      const identity = authClient.getIdentity();
+      const userPrincipal = identity.getPrincipal().toText();
+      setPrincipal(userPrincipal);
+      const storedProfile = localStorage.getItem(`profile:${userPrincipal}`);
+  if (storedProfile) {
+    const profileData = JSON.parse(storedProfile);
+    setProfile(profileData);
+  } else {
+    alert("⚠️ Profile not found for this user. Redirecting...");
+    navigate("/profile-setup");
+  }
+} catch (error) {
+  alert("Error loading profile. Please try again.");
+  console.error("Profile Load Error:", error);
+}
+  };
+    loadProfile();
+  }, []);
+
   const handlePostUpload = () => {
     if (postContent.trim()) {
       const newPost = {
-        id: Date.now(),
-        username: "you",
-        avatar: "https://i.pravatar.cc/40?img=1",
-        content: postContent.trim(),
-        likes: [],
-        timestamp: new Date().toISOString(),
-        visible: visibility === "public",
-        author: "you",
-      };
+      id: Date.now(),
+      username: profile.username, // ✅ use actual profile
+      avatar: profile.avatarUrl || "https://i.ibb.co/Pr3bY4X/default-avatar.png",
+      content: postContent.trim(),
+      likes: [],
+      timestamp: new Date().toISOString(),
+      visible: visibility === "public",
+      author: profile.username,
+    };
       setPosts([newPost, ...posts]);
       setPostContent("");
     }
@@ -81,8 +172,36 @@ function FeedPage() {
       })
     );
   };
+  
+  const handleCommentSubmit = (postId) => {
+  const newComment = commentInputs[postId];
+  if (!newComment) return;
 
-  const formatTime = (timestamp) => {
+  const currentUser = profile?.username || "you";
+  const timestamp = Date.now();
+
+  const updatedPosts = posts.map((post) =>
+    post.id === postId
+      ? {
+          ...post,
+          comments: [
+            ...post.comments,
+            {
+              commenter: currentUser,
+              text: newComment,
+              timestamp,
+            },
+          ],
+        }
+      : post
+  );
+
+  setPosts(updatedPosts);
+  setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
+  localStorage.setItem("posts", JSON.stringify(updatedPosts));
+};
+
+ const formatTime = (timestamp) => {
     const diff = Math.floor((new Date() - new Date(timestamp)) / 1000);
     if (diff < 60) return "Just now";
     if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
@@ -97,7 +216,7 @@ function FeedPage() {
         <div className="top-bar">
           <div className="logo">
             <img
-              src="https://mintlify.s3.us-west-1.amazonaws.com/base-a060aa97/images/hero.png"
+              src="https://png.pngtree.com/png-clipart/20240703/original/pngtree-an-app-with-logos-of-various-social-media-icons-vector-png-image_15478072.png"
               alt="Onchain Logo"
               className="logo-img"
             />
@@ -108,6 +227,40 @@ function FeedPage() {
             <i className="fas fa-paper-plane"></i>
           </div>
         </div>
+
+      {/* 🔍 Search & Follow Dropdown */}
+<div className="search-dropdown">
+  <input
+    type="text"
+    placeholder="Search users"
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    onFocus={() => setShowDropdown(true)}
+    onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // Delay to allow click
+    className="search-input"
+  />
+
+  {showDropdown && filteredUsers.length > 0 && (
+    <div className="dropdown-results">
+      {filteredUsers.map((user) => (
+        <div key={user.id} className="dropdown-user">
+          <img src={user.avatar} alt={user.username} className="dropdown-avatar" />
+          <span className="dropdown-username">{user.username}</span>
+          <button
+            onClick={() => toggleFollow(user.id)}
+            className={user.isFollowing ? "unfollow-btn" : "follow-btn"}
+          >
+            {user.isFollowing ? "Unfollow" : "Follow"}
+          </button>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+        {/* Logged in principal info */}
+  <p className="info-text" style={{ textAlign: "right", margin: "0 1rem", fontSize: "0.9rem", color: "#ccc" }}>
+    Logged in as: {principal}
+  </p>
 
         {/* Post Creation */}
         <div className="upload-section">
@@ -177,7 +330,7 @@ function FeedPage() {
               ) : (
                 <>
                   <div className="content">{post.content}</div>
-                  {post.author === "you" && (
+                  {post.author === profile?.username && (
                     <div className="post-buttons">
                       <button onClick={() => startEdit(post.id, post.content)}>
                         Edit
@@ -189,8 +342,29 @@ function FeedPage() {
               )}
 
               <div className="comment-box">
-                <input type="text" placeholder="Add a comment..." />
-              </div>
+  <input
+    type="text"
+    placeholder="Add a comment..."
+    value={commentInputs[post.id] || ""}
+    onChange={(e) =>
+      setCommentInputs((prev) => ({ ...prev, [post.id]: e.target.value }))
+    }
+  />
+  <button
+    className="comment-button"
+    onClick={() => handleCommentSubmit(post.id)}
+  >
+    Post
+  </button>
+
+  <div className="comment-list">
+    {post.comments?.map((c, idx) => (
+      <div key={idx} className="comment-item">
+        <strong>@{c.commenter}</strong>: {c.text}
+      </div>
+    ))}
+  </div>
+</div>
             </div>
           ))}
 
