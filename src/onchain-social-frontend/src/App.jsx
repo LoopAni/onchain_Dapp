@@ -4,6 +4,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import FeedPage from './pages/FeedPage';
+import EditProfilePage from "./pages/EditProfilePage";
+
 
 
 
@@ -17,6 +19,7 @@ function App() {
          <Route path="/register" element={<RegisterPage />} />
            <Route path="/profile" element={<ProfilePage />} />
            <Route path="/feed" element={<FeedPage />} />
+            <Route path="/edit-profile" element={<EditProfilePage />} />
 
            
          

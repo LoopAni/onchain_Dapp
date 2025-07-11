@@ -1,18 +1,29 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
 
-function LandingPage() {
+const LandingPage = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="landing-container">
-      <header className="landing-header">
-        <h1>Welcome to Onchain Social</h1>
-        <p>Decentralized. Secure. Yours.</p>
-        <div className="landing-buttons">
-          <a href="/login" className="btn">Login</a>
-          <a href="/register" className="btn">Register</a>
+      <div className="floating-blobs"></div> {/* Optional animated background */}
+      <div className="landing-box animate-in">
+        <h1 className="landing-title">Welcome to OnChain Social</h1>
+        <p className="landing-description">
+          A decentralized, secure, and blockchain-powered social network built
+          for the future. Connect, share, and grow — with full control of your data.
+        </p>
+        <div className="button-group">
+          <button onClick={() => navigate("/login")}>Login</button>
+          <button onClick={() => navigate("/register")}>Register</button>
         </div>
-      </header>
+        <p className="creator-tag">
+          Created by <strong>Anisha Jeena</strong> & <strong>Muskan Gedam</strong>
+        </p>
+      </div>
     </div>
   );
-}
+};
 
 export default LandingPage;

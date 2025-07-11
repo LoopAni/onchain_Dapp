@@ -2,16 +2,11 @@
 
 .login-container {
   display: flex;
-  height: 100vh;
-  width: 100vw;
-}
-
-.login-left {
-  width: 50%;
-  background: linear-gradient(to bottom right, #1c1c1c, #2d2d2d);
-  display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(to bottom right, #1c1c1c, #2d2d2d);
 }
 
 .login-form {
@@ -27,6 +22,7 @@
 .login-form h2 {
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .login-input {
@@ -36,6 +32,8 @@
   font-size: 1rem;
   border-radius: 8px;
   border: none;
+  background: #1e1e1e;
+  color: white;
 }
 
 .login-button {
@@ -53,6 +51,7 @@
 .login-link {
   margin-top: 1rem;
   font-size: 0.9rem;
+  text-align: center;
 }
 
 .login-link a {

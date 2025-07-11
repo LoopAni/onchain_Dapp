@@ -1,72 +1,51 @@
 import "./FeedPage.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function FeedPage() {
-  const [postCaption, setPostCaption] = useState("");
+  const [postContent, setPostContent] = useState("");
+  const [visibility, setVisibility] = useState("public");
+
   const [posts, setPosts] = useState([
     {
       id: 1,
       username: "muskan",
       avatar: "https://i.pravatar.cc/40?img=10",
-      caption: "Just launched my on-chain social app! 🚀 #web3",
+      content: "Just launched my on-chain social app! 🚀 #web3",
       likes: ["you"],
+      timestamp: new Date().toISOString(),
+      visible: true,
+      author: "muskan",
     },
     {
       id: 2,
       username: "anisha",
       avatar: "https://i.pravatar.cc/40?img=20",
-      caption: "Coffee + code = ❤️",
+      content: "Coffee + code = ❤️",
       likes: [],
+      timestamp: new Date().toISOString(),
+      visible: true,
+      author: "anisha",
     },
   ]);
 
   const [editingPostId, setEditingPostId] = useState(null);
-  const [editCaption, setEditCaption] = useState("");
-
-
-
-  // Search & Follow logic
-  const [search, setSearch] = useState("");
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      username: "muskan",
-      avatar: "https://i.pravatar.cc/100?img=10",
-      isFollowing: false,
-    },
-    {
-      id: 2,
-      username: "anisha",
-      avatar: "https://i.pravatar.cc/100?img=20",
-      isFollowing: false,
-    },
-    {
-      id: 3,
-      username: "loopani",
-      avatar: "https://i.pravatar.cc/100?img=30",
-      isFollowing: false,
-    },
-  ]);
-
-  const toggleFollow = (id) => {
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === id ? { ...u, isFollowing: !u.isFollowing } : u
-      )
-    );
-  };
+  const [editContent, setEditContent] = useState("");
 
   const handlePostUpload = () => {
-    if (postCaption.trim()) {
+    if (postContent.trim()) {
       const newPost = {
         id: Date.now(),
         username: "you",
         avatar: "https://i.pravatar.cc/40?img=1",
-        caption: postCaption.trim(),
+        content: postContent.trim(),
         likes: [],
+        timestamp: new Date().toISOString(),
+        visible: visibility === "public",
+        author: "you",
       };
       setPosts([newPost, ...posts]);
-      setPostCaption("");
+      setPostContent("");
     }
   };
 
@@ -74,38 +53,42 @@ function FeedPage() {
     setPosts(posts.filter((post) => post.id !== id));
   };
 
-  const startEdit = (id, currentCaption) => {
+  const startEdit = (id, currentContent) => {
     setEditingPostId(id);
-    setEditCaption(currentCaption);
+    setEditContent(currentContent);
   };
 
   const handleSaveEdit = (id) => {
     setPosts(
       posts.map((post) =>
-        post.id === id ? { ...post, caption: editCaption } : post
+        post.id === id ? { ...post, content: editContent } : post
       )
     );
     setEditingPostId(null);
   };
 
   const handleToggleLike = (postId) => {
-  setPosts((prevPosts) =>
-    prevPosts.map((post) => {
-      if (post.id === postId) {
-        const hasLiked = post.likes.includes("you"); // Replace "you" with principal in real version
-        const updatedLikes = hasLiked
-          ? post.likes.filter((user) => user !== "you") // remove like
-          : [...post.likes, "you"]; // add like
-        return { ...post, likes: updatedLikes };
-      }
-      return post;
-     })
+    setPosts((prevPosts) =>
+      prevPosts.map((post) => {
+        if (post.id === postId) {
+          const hasLiked = post.likes.includes("you");
+          const updatedLikes = hasLiked
+            ? post.likes.filter((user) => user !== "you")
+            : [...post.likes, "you"];
+          return { ...post, likes: updatedLikes };
+        }
+        return post;
+      })
     );
   };
 
-  const filteredUsers = users.filter((u) =>
-    u.username.toLowerCase().includes(search.toLowerCase())
-  );
+  const formatTime = (timestamp) => {
+    const diff = Math.floor((new Date() - new Date(timestamp)) / 1000);
+    if (diff < 60) return "Just now";
+    if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} hr ago`;
+    return new Date(timestamp).toLocaleDateString();
+  };
 
   return (
     <div className="feed-container">
@@ -126,85 +109,90 @@ function FeedPage() {
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="upload-section">
-          <input
-            type="text"
-            placeholder="Search users to follow..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ marginBottom: "1rem" }}
-          />
-
-          {search.length > 0 &&
-            filteredUsers.map((user) => (
-              <div className="user-card" key={user.id}>
-                <img src={user.avatar} className="avatar" alt={user.username} />
-                <span>@{user.username}</span>
-                <button onClick={() => toggleFollow(user.id)}>
-                  {user.isFollowing ? "Unfollow" : "Follow"}
-                </button>
-              </div>
-            ))}
-        </div>
-
         {/* Post Creation */}
         <div className="upload-section">
           <textarea
-            placeholder="What's happening?"
-            value={postCaption}
-            onChange={(e) => setPostCaption(e.target.value)}
+            placeholder="Share your thoughts..."
+            value={postContent}
+            onChange={(e) => setPostContent(e.target.value)}
             rows={3}
           />
+          <select
+            value={visibility}
+            onChange={(e) => setVisibility(e.target.value)}
+          >
+            <option value="public">🌐 Public</option>
+            <option value="private">🔒 Private</option>
+          </select>
           <button onClick={handlePostUpload}>Post</button>
         </div>
 
         {/* Posts */}
-        {posts.map((post) => (
-          <div className="post" key={post.id}>
-            <div className="post-header">
-              <img src={post.avatar} className="avatar" alt={post.username} />
-              <span>@{post.username}</span>
-            </div>
-
-            <div className="post-actions">
-              <button
-                className={`like-button ${post.likes.includes("you") ? "liked" : ""}`}
-                onClick={() => handleToggleLike(post.id)}
-              >
-               ❤️ {post.likes.length}
-              </button>
-            </div>
-
-            {editingPostId === post.id ? (
-              <div className="edit-box">
-                <input
-                  type="text"
-                  value={editCaption}
-                  onChange={(e) => setEditCaption(e.target.value)}
-                />
-                <button onClick={() => handleSaveEdit(post.id)}>Save</button>
-                <button onClick={() => setEditingPostId(null)}>Cancel</button>
+        {posts
+          .filter((post) => post.visible || post.username === "you")
+          .map((post) => (
+            <div className="post" key={post.id}>
+              <div className="post-header">
+                <img src={post.avatar} className="avatar" alt={post.username} />
+                <div>
+                  <span
+                    className="clickable-username"
+                    onClick={() => {
+                      if (post.username === "you") {
+                        window.open("/edit-profile", "_blank");
+                      }
+                    }}
+                  >
+                    @{post.username}
+                  </span>{" "}
+                  ·{" "}
+                  <span className="timestamp">{formatTime(post.timestamp)}</span>
+                  {!post.visible && (
+                    <span className="private-tag">🔒 Private</span>
+                  )}
+                </div>
               </div>
-            ) : (
-              <>
-                <div className="caption">{post.caption}</div>
-                {post.username === "you" && (
-                  <div className="post-buttons">
-                    <button onClick={() => startEdit(post.id, post.caption)}>
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(post.id)}>Delete</button>
-                  </div>
-                )}
-              </>
-            )}
 
-            <div className="comment-box">
-              <input type="text" placeholder="Add a comment..." />
+              <div className="post-actions">
+                <button
+                  className={`like-button ${
+                    post.likes.includes("you") ? "liked" : ""
+                  }`}
+                  onClick={() => handleToggleLike(post.id)}
+                >
+                  ❤️ {post.likes.length}
+                </button>
+              </div>
+
+              {editingPostId === post.id ? (
+                <div className="edit-box">
+                  <input
+                    type="text"
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                  />
+                  <button onClick={() => handleSaveEdit(post.id)}>Save</button>
+                  <button onClick={() => setEditingPostId(null)}>Cancel</button>
+                </div>
+              ) : (
+                <>
+                  <div className="content">{post.content}</div>
+                  {post.author === "you" && (
+                    <div className="post-buttons">
+                      <button onClick={() => startEdit(post.id, post.content)}>
+                        Edit
+                      </button>
+                      <button onClick={() => handleDelete(post.id)}>Delete</button>
+                    </div>
+                  )}
+                </>
+              )}
+
+              <div className="comment-box">
+                <input type="text" placeholder="Add a comment..." />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
         {/* Bottom Navigation */}
         <div className="bottom-nav">

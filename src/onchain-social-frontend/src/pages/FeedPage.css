@@ -1,21 +1,25 @@
 /* Main container */
 .feed-container {
-  height: 100vh;
+  min-height: 100vh;
+  width: 100vw;
   background: #121212;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-start;  /* Align left */
   align-items: flex-start;
 }
 
-/* Feed content box */
+/* Feed content box - left-aligned */
 .feed-box {
-  width: 50vw;
-  height: 100vh;
+  width: 100%;
+  max-width: 750px;
+  height: 100%;
   padding: 2rem;
   color: #fff;
   overflow-y: auto;
   position: relative;
-  background: #121212;
+
+  margin-left: 2rem;      /* ✅ Start content from left */
+  margin-right: auto;
 }
 
 /* Top bar */
@@ -23,229 +27,187 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.top-bar .logo {
-  display: flex;
-  align-items: center;
+.logo {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #00acee;
+  display: flex;
+  align-items: center;
 }
 
 .logo-img {
-  width: 35px;
-  height: 35px;
-  margin-right: 0.6rem;
+  width: 30px;
+  margin-right: 10px;
 }
 
-/* Icons on right */
-.top-bar .icons i {
-  margin-left: 1rem;
-  font-size: 1.4rem;
+.icons i {
+  margin-left: 15px;
+  font-size: 1.2rem;
   cursor: pointer;
-  color: #ffffff;
 }
 
-/* Upload section (posts & search) */
+/* Upload section - medium width */
 .upload-section {
-  background: #1e1e1e;
-  border-radius: 10px;
-  padding: 1rem;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 1.5rem;
-  border: 1px solid #333;
+  background: #1e1e1e;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 95%;
+  max-width: 700px;
 }
 
-.upload-section textarea,
-.upload-section input[type="text"] {
-  width: 100%;
+.upload-section textarea {
   resize: none;
+  padding: 0.75rem;
+  border-radius: 8px;
   border: none;
-  border-radius: 6px;
-  padding: 0.8rem;
-  background: #181818;
-  color: #fff;
-  font-size: 1rem;
   margin-bottom: 0.5rem;
+  font-size: 1rem;
+  background: #fff;
+  color: #000;
+}
+
+.upload-section select {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  background: #1e1e1e;
+  color: #fff;
+  border: 1px solid #444;
 }
 
 .upload-section button {
-  background: #00acee;
-  color: white;
-  padding: 0.5rem 1.2rem;
+  padding: 0.5rem;
+  background-color: #00c896;
   border: none;
   border-radius: 6px;
+  color: white;
+  font-weight: bold;
   cursor: pointer;
 }
 
-/* Posts */
+/* Posts - medium width */
 .post {
   background-color: #1e1e1e;
-  border-radius: 12px;
+  border-radius: 10px;
   padding: 1rem;
-  margin-bottom: 1.5rem;
-  color: #fff;
-  border: 1px solid #2e2e2e;
+  margin: 0 0 1rem 0;  /* Aligned to left, no auto margin */
+  width: 95%;
+  max-width: 700px;
 }
 
+/* Post header */
 .post-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-weight: bold;
+  gap: 10px;
+}
+
+.post-header .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.timestamp {
+  color: #bbb;
+  font-size: 0.85rem;
+  margin-left: 5px;
+}
+
+.private-tag {
+  background-color: #444;
+  color: #ffcc00;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  margin-left: 8px;
+}
+
+/* Post content */
+.content {
+  font-size: 1rem;
+  margin-top: 0.75rem;
   margin-bottom: 0.5rem;
 }
 
-.avatar {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* Post Actions */
-.post-actions {
-  margin-top: 0.5rem;
-}
-
-.icon {
-  font-size: 1.3rem;
+/* Like button */
+.like-button {
+  background: none;
+  border: none;
+  color: #bbb;
   cursor: pointer;
-  margin-right: 0.8rem;
-  color: #999;
-  transition: color 0.2s, transform 0.2s;
+  font-size: 1rem;
 }
 
-.icon.liked {
-  color: red;
-  transform: scale(1.2);
+.like-button.liked {
+  color: #ff5e5e;
 }
 
-/* Caption */
-.caption {
-  font-size: 0.95rem;
-  color: #ccc;
-  margin-top: 0.3rem;
-  line-height: 1.5;
-}
-
-/* Edit post section */
-.edit-box {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
+/* Edit box */
 .edit-box input {
-  flex: 1;
   padding: 0.4rem;
-  border-radius: 6px;
-  border: 1px solid #333;
-  background: #181818;
-  color: #fff;
+  margin-right: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background: #222;
+  color: white;
 }
 
-/* Edit/Delete buttons */
-.post-buttons {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+.edit-box button {
+  margin-right: 0.3rem;
+  padding: 0.4rem 0.6rem;
+  background: #00c896;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
+/* Post buttons */
 .post-buttons button {
-  background: transparent;
-  color: #00acee;
-  border: 1px solid #00acee;
-  padding: 0.3rem 0.7rem;
-  border-radius: 5px;
+  margin-right: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
 }
 
 /* Comment box */
-.comment-box {
-  margin-top: 0.5rem;
-}
-
 .comment-box input {
   width: 100%;
   padding: 0.4rem;
+  border: 1px solid #444;
   border-radius: 6px;
-  border: 1px solid #333;
-  background: #181818;
-  color: #fff;
-  font-size: 0.85rem;
-  outline: none;
+  margin-top: 0.5rem;
+  background-color: #222;
+  color: white;
 }
 
 /* Bottom nav */
 .bottom-nav {
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 50vw;
-  background: #121212;
+  width: 100vw;
   display: flex;
   justify-content: space-around;
-  align-items: center;
   padding: 0.8rem 0;
-  border-top: 1px solid #2a2a2a;
-}
-
-.bottom-nav .nav-icon {
-  color: #ffffff;
-  font-size: 1.3rem;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.bottom-nav .nav-icon.active {
-  color: #00acee;
-}
-
-/* Suggested User Search Result */
-.user-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
   background-color: #1e1e1e;
-  padding: 0.6rem 1rem;
-  border: 1px solid #333;
-  border-radius: 8px;
-  margin-bottom: 0.8rem;
+  border-top: 1px solid #333;
 }
 
-.user-card .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.user-card span {
-  color: #fff;
-  font-weight: 500;
-}
-
-.user-card button {
-  margin-left: auto;
-  background-color: #00acee;
-  color: #121212;
-  border: none;
-  border-radius: 6px;
-  padding: 0.4rem 0.8rem;
-  cursor: pointer;
-}
-
-/* Like/Dislike Buttons */
-like-button {
-  background: none;
-  color: #999;
-  border: none;
-  cursor: pointer;
+.nav-icon {
+  color: #aaa;
   font-size: 1.2rem;
-  transition: color 0.3s;
+  cursor: pointer;
 }
 
-.like-button.liked {
-  color: red;
+.nav-icon.active {
+  color: #00c896;
 }
